@@ -4,12 +4,17 @@ import ReactDOM from "react-dom";
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
 const Statistics = ({ good, neutral, bad }) => {
+  let all = good + neutral + bad;
+  let avg = all === 0 ? 0 : (good - bad) / all;
   return (
     <div>
       <h1>statistics</h1>
       <div>good {good}</div>
       <div>neutral {neutral}</div>
       <div>bad {bad}</div>
+      <div>all {all}</div>
+      <div>avarage {avg}</div>
+      <div>positive {all === 0 ? 0 : (good / all) * 100 || 0} %</div>
     </div>
   );
 };
