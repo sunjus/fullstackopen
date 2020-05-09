@@ -9,17 +9,46 @@ const Statistics = ({ good, neutral, bad }) => {
   let avg = all === 0 ? 0 : (good - bad) / all;
   let positive = all === 0 ? 0 : (good / all) * 100;
 
+  // let feedback = "";
+  // console.log("if else : ", feedback);
+  // //  ternary operator
+  // let showFeedback = all === 0 ? "No feedback given" : all;
+  // console.log("tenary operator, showFeedback", showFeedback);
+
   return (
     <div>
       <h1>statistics</h1>
-      <div>good {good}</div>
-      <div>neutral {neutral}</div>
-      <div>bad {bad}</div>
-      <div>all {all}</div>
-      <div>avarage {avg}</div>
-      <div>positive {positive} %</div>
+      {all === 0 ? (
+        <div>"No feedback given"</div>
+      ) : (
+        <div>
+          <div>good {good}</div>
+          <div>neutral {neutral}</div>
+          <div>bad {bad}</div>
+          <div>all {all}</div>
+          <div>avarage {avg}</div>
+          <div>positive {positive} %</div>
+        </div>
+      )}
     </div>
   );
+
+  // if else
+  // if (all > 0) {
+  //   return (
+  //     <div>
+  //       <h1>statistics</h1>
+  //       <div>good {good}</div>
+  //       <div>neutral {neutral}</div>
+  //       <div>bad {bad}</div>
+  //       <div>all {all}</div>
+  //       <div>avarage {avg}</div>
+  //       <div>positive {positive} %</div>
+  //     </div>
+  //   );
+  // } else {
+  //   return <div>No feedback given</div>;
+  // }
 };
 
 const App = (props) => {
