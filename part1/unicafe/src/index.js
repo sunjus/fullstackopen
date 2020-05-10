@@ -3,6 +3,12 @@ import ReactDOM from "react-dom";
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
+const Statistic = ({ text, value }) => (
+  <div>
+    {text} {value}
+  </div>
+);
+
 const Statistics = ({ good, neutral, bad }) => {
   let all = good + neutral + bad;
   //the average score (good: 1, neutral: 0, bad: -1)
@@ -13,42 +19,25 @@ const Statistics = ({ good, neutral, bad }) => {
   // console.log("if else : ", feedback);
   // //  ternary operator
   // let showFeedback = all === 0 ? "No feedback given" : all;
-  // console.log("tenary operator, showFeedback", showFeedback);
+  // console.log("ternary operator, showFeedback", showFeedback);
 
   return (
     <div>
       <h1>statistics</h1>
       {all === 0 ? (
-        <div>"No feedback given"</div>
+        <div>No feedback given</div>
       ) : (
         <div>
-          <div>good {good}</div>
-          <div>neutral {neutral}</div>
-          <div>bad {bad}</div>
-          <div>all {all}</div>
-          <div>avarage {avg}</div>
-          <div>positive {positive} %</div>
+          <Statistic text="good" value={good} />
+          <Statistic text="neutral" value={neutral} />
+          <Statistic text="bad" value={bad} />
+          <Statistic text="all" value={all} />
+          <Statistic text="average" value={avg} />
+          <Statistic text="positive" value={positive + "%"} />
         </div>
       )}
     </div>
   );
-
-  // if else
-  // if (all > 0) {
-  //   return (
-  //     <div>
-  //       <h1>statistics</h1>
-  //       <div>good {good}</div>
-  //       <div>neutral {neutral}</div>
-  //       <div>bad {bad}</div>
-  //       <div>all {all}</div>
-  //       <div>avarage {avg}</div>
-  //       <div>positive {positive} %</div>
-  //     </div>
-  //   );
-  // } else {
-  //   return <div>No feedback given</div>;
-  // }
 };
 
 const App = (props) => {
