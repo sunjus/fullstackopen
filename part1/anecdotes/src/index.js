@@ -6,13 +6,24 @@ const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 const App = (props) => {
   const [selected, setSelected] = useState(0);
 
+  const [points, setPoints] = useState(Array(props.anecdotes.length).fill(0));
+
   const generateRandom = () => {
     setSelected(Math.floor(Math.random() * props.anecdotes.length));
+  };
+
+  const votes = (selected) => {
+    // increment the property 2 value by one
+    const copy = [...points];
+    copy[selected] += 1;
+    return setPoints(copy);
   };
 
   return (
     <div>
       <div>{props.anecdotes[selected]}</div>
+      <div>has {points[selected]} votes</div>
+      <Button onClick={() => votes(selected)} text="vote" />
       <Button onClick={generateRandom} text="next anecdote" />
     </div>
   );
