@@ -3,28 +3,37 @@ import ReactDOM from "react-dom";
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>;
 
+const Anecdote = ({ point, text }) => (
+  <div>
+    <div>{text}</div>
+    <div>has {point} votes</div>
+  </div>
+);
+
 const App = (props) => {
   const [selected, setSelected] = useState(0);
-
   const [points, setPoints] = useState(Array(props.anecdotes.length).fill(0));
+  const [mostVoted, setMostVoted] = useState(0);
 
   const generateRandom = () => {
     setSelected(Math.floor(Math.random() * props.anecdotes.length));
   };
 
   const votes = (selected) => {
-    // increment the property 2 value by one
     const copy = [...points];
     copy[selected] += 1;
-    return setPoints(copy);
+    setPoints(copy);
+    setMostVoted(copy.indexOf(Math.max(...copy)));
   };
 
   return (
     <div>
-      <div>{props.anecdotes[selected]}</div>
-      <div>has {points[selected]} votes</div>
+      <h1>Anecdote of the day</h1>
+      <Anecdote point={points[selected]} text={props.anecdotes[selected]} />
       <Button onClick={() => votes(selected)} text="vote" />
       <Button onClick={generateRandom} text="next anecdote" />
+      <h1>Anecdote with most votes</h1>
+      <Anecdote point={points[mostVoted]} text={props.anecdotes[mostVoted]} />
     </div>
   );
 };
