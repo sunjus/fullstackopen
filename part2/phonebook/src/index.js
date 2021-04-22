@@ -18,6 +18,14 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newPerson = { name: newName };
+
+    const nameExist = persons.find(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
+    if (nameExist) {
+      return alert(`${newName} is already added to phonebook`);
+    }
+
     setPersons([...persons, newPerson]);
     setNewName("");
   };
@@ -39,7 +47,6 @@ const App = () => {
           <div key={index}>{person.name}</div>
         ))}
       </ul>
-      <div> {}</div>
     </div>
   );
 };
