@@ -3,21 +3,26 @@ import ReactDOM from "react-dom";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas" },
-    { name: "Ada Lovelace" },
+    { name: "Arto Hellas", number: "040-1234567" },
   ]);
   console.log(persons[0]);
 
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const handleNameInput = (e) => {
     console.log(e.target.value);
     setNewName(e.target.value);
   };
 
+  const handleNumberInput = (e) => {
+    console.log(e.target.value);
+    setNewNumber(e.target.value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newPerson = { name: newName };
+    const newPerson = { name: newName, number: newNumber };
 
     const nameExist = persons.find(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
@@ -28,6 +33,7 @@ const App = () => {
 
     setPersons([...persons, newPerson]);
     setNewName("");
+    setNewNumber("");
   };
 
   return (
@@ -38,13 +44,19 @@ const App = () => {
           name: <input value={newName} onChange={handleNameInput} />
         </div>
         <div>
+          number: <input value={newNumber} onChange={handleNumberInput} />
+        </div>
+        <div>
           <button type="submit">add</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
         {persons.map((person, index) => (
-          <div key={index}>{person.name}</div>
+          <div key={index}>
+            {person.name}
+            {person.number}
+          </div>
         ))}
       </ul>
     </div>
