@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 
-const Filter = ({ persons }) => {
-  const [filteredPersons, setFilteredPersons] = useState([]);
-
-  const handleFilterChange = (e) => {
-    setFilteredPersons(
-      persons.filter((p) =>
-        p.name.toLowerCase().includes(e.target.value.toLowerCase())
-      )
-    );
-  };
-
+const Filter = ({ handleFilterChange, filteredPersons }) => {
   return (
     <div>
       filter shown with
