@@ -47,7 +47,7 @@ const ResultMaster = ({ filteredList, setQuery }) => {
   if (filteredList.length === 1) {
     return <Result1 country={filteredList[0]} />;
     //fixed err to specify strict range : added filteredList length > 1
-    //so that the setQuery works well
+    //so that the setQuery works well.
   } else if (filteredList.length < 10 || filteredList.length > 1) {
     return <Result10 filteredList={filteredList} setQuery={setQuery} />;
   }
