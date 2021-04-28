@@ -8,11 +8,14 @@ const Search = ({ handleSearch, query }) => (
   </form>
 );
 
-const Result10 = ({ filteredList }) => {
+const Result10 = ({ filteredList, setQuery }) => {
   return (
     <div>
       {filteredList.map((country, i) => (
-        <p key={i}>{country.name}</p>
+        <div key={i}>
+          {country.name}
+          <button onClick={() => setQuery(country.name)}>show</button>
+        </div>
       ))}
     </div>
   );
@@ -40,65 +43,17 @@ const Result1 = ({ country }) => {
   );
 };
 
-const ResultMaster = ({ filteredList }) => {
+const ResultMaster = ({ filteredList, setQuery }) => {
   if (filteredList.length === 1) {
     return <Result1 country={filteredList[0]} />;
-  } else if (filteredList.length < 10) {
-    return <Result10 filteredList={filteredList} />;
+    //fixed err to specify strict range : added filteredList length > 1
+    //so that the setQuery works well
+  } else if (filteredList.length < 10 || filteredList.length > 1) {
+    return <Result10 filteredList={filteredList} setQuery={setQuery} />;
   }
   return <div>Too many matches, specify another filter</div>;
 };
 
-/*
-const Result = ({ countries, query }) => {
-  const filteredList =
-    query === ""
-      ? []
-      : countries.filter((c) =>
-          c.name.toLowerCase().includes(query.toLowerCase())
-        );
-  console.log(filteredList);
-
-if (filteredList.length > 10) {
-  return <div>Too many matches, specify another filter</div>;
-}
-
-if (filteredList.length === 1) {
-  let Country = filteredList[0];
-  return (
-    <div>
-      <h1>{Country.name}</h1>
-      <p>Capital {Country.capital}</p>
-      <p>Population {Country.population} </p>
-
-      <h3>languages</h3>
-      <ul>
-        {Country.languages.map((language) => (
-          <li key={Country.name + language.name}>{language.name}</li>
-        ))}
-      </ul>
-      <img
-        src={Country.flag}
-        alt={Country.name}
-        style={{ width: 120, height: 120 }}
-      />
-    </div>
-  );
-}
-
-if (filteredList.length > 1) {
-  return (
-    <div>
-      {filteredList.map((country, i) => (
-        <p key={i}>{country.name}</p>
-      ))}
-    </div>
-  );
-
-  return <></>;
-};
-
-*/
 function App() {
   const [countries, setCountries] = useState([]);
   const [query, setQuery] = useState("");
@@ -126,7 +81,7 @@ function App() {
       <div>
         find countries
         <Search query={query} handleSearch={handleSearch} />
-        <ResultMaster filteredList={filteredList} />
+        <ResultMaster filteredList={filteredList} setQuery={setQuery} />
       </div>
     </div>
   );
