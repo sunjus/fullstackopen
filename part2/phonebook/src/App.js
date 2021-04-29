@@ -11,9 +11,14 @@ const App = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    personService.getAll().then((initialPhonebook) => {
-      setPersons(initialPhonebook);
-    });
+    personService
+      .getAll()
+      .then((initialPhonebook) => {
+        setPersons(initialPhonebook);
+      })
+      .catch((error) => {
+        console.log("fail");
+      });
   }, []);
 
   //Filter section :Check if the name already exists in the phonebook
@@ -39,12 +44,34 @@ const App = () => {
     }
 
     //Add a new person
-    personService.create(newPerson).then((returnedPhonebook) => {
-      setPersons(persons.concat(returnedPhonebook));
-      // setPersons([...persons, newPerson]);
-      setNewName("");
-      setNewNumber("");
-    });
+    personService
+      .create(newPerson)
+      .then((returnedPhonebook) => {
+        setPersons(persons.concat(returnedPhonebook));
+        // setPersons([...persons, newPerson]);
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //Delete person
+  const handleDelete = (e) => {
+    if (window.confirm(`Do you want to delete ${e.target.name}?`)) {
+      console.log(e.target.value);
+      personService
+        .remove(e.target.value)
+        .then(() => {
+          personService.getAll().then((returnedName) => {
+            setPersons(returnedName);
+          });
+        })
+        .catch((err) => {
+          console.log("Person does not exist");
+        });
+    }
   };
 
   return (
@@ -63,7 +90,7 @@ const App = () => {
         addPerson={addPerson}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} />
+      <Persons persons={persons} handleDelete={handleDelete} />
     </div>
   );
 };
