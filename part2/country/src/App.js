@@ -21,6 +21,38 @@ const Result10 = ({ filteredList, setQuery }) => {
   );
 };
 
+const Weather = ({ country, query }) => {
+  const [weather, setWeather] = useState("");
+
+  const api_key = "774f771de49d255580a3846808821038";
+  console.log("api_key", api_key);
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://api.weatherstack.com/current?access_key=${api_key}&query=${query}`
+      )
+      .then((res) => {
+        console.log(res.data);
+        setWeather(res.data.current);
+      });
+  }, [country]);
+
+  console.log(weather);
+  console.log(country);
+
+  return (
+    <div>
+      <h3>Weather in {country.capital}</h3>
+      <p>temperature: {weather.temperature} Celcius</p>
+      <img src={weather.weather_icons} style={{ width: 80, height: 80 }} />
+      <p>
+        wind:{weather.wind_speed} mph direction {weather.wind_dir}
+      </p>
+    </div>
+  );
+};
+
 const Result1 = ({ country }) => {
   return (
     <div>
@@ -28,7 +60,7 @@ const Result1 = ({ country }) => {
       <p>Capital {country.capital}</p>
       <p>Population {country.population} </p>
 
-      <h3>languages</h3>
+      <h3>Spoken languages</h3>
       <ul>
         {country.languages.map((language) => (
           <li key={country.name + language.name}>{language.name}</li>
@@ -39,6 +71,7 @@ const Result1 = ({ country }) => {
         alt={country.name}
         style={{ width: 120, height: 120 }}
       />
+      <Weather query={country.name} country={country} />
     </div>
   );
 };
