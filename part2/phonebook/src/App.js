@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
+import personService from "./services/persons";
 
 const App = () => {
   const [newName, setNewName] = useState("");
@@ -11,39 +11,40 @@ const App = () => {
   const [persons, setPersons] = useState([]);
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((res) => {
-      console.log("promise fulfilled");
-      setPersons(res.data);
+    personService.getAll().then((initialPhonebook) => {
+      setPersons(initialPhonebook);
     });
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newPerson = { name: newName, number: newNumber };
-
-    const nameExist = persons.find(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
-    );
-    if (nameExist) {
-      return alert(`${newName} is already added to phonebook`);
-    }
-
-    axios.post("http://localhost:3001/persons", newPerson).then((response) => {
-      console.log(response.data);
-      setPersons(persons.concat(response.data));
-      // setPersons([...persons, newPerson]);
-      setNewName("");
-      setNewNumber("");
-    });
-  };
-
+  //Filter section :Check if the name already exists in the phonebook
   const handleFilterChange = (e) => {
     setFilteredPersons(
       persons.filter((p) =>
         p.name.toLowerCase().includes(e.target.value.toLowerCase())
       )
     );
+  };
+
+  //Add new person
+  const addPerson = (e) => {
+    e.preventDefault();
+    const newPerson = { name: newName, number: newNumber };
+
+    //Alarm if the input name exists
+    const checkedName = persons.find(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
+    if (checkedName) {
+      return alert(`${newName} is already added to phonebook`);
+    }
+
+    //Add a new person
+    personService.create(newPerson).then((returnedPhonebook) => {
+      setPersons(persons.concat(returnedPhonebook));
+      // setPersons([...persons, newPerson]);
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   return (
@@ -59,7 +60,7 @@ const App = () => {
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
-        handleSubmit={handleSubmit}
+        addPerson={addPerson}
       />
       <h3>Numbers</h3>
       <Persons persons={persons} />
