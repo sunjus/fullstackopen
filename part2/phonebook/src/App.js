@@ -28,9 +28,14 @@ const App = () => {
     if (nameExist) {
       return alert(`${newName} is already added to phonebook`);
     }
-    setPersons([...persons, newPerson]);
-    setNewName("");
-    setNewNumber("");
+
+    axios.post("http://localhost:3001/persons", newPerson).then((response) => {
+      console.log(response.data);
+      setPersons(persons.concat(response.data));
+      // setPersons([...persons, newPerson]);
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const handleFilterChange = (e) => {
