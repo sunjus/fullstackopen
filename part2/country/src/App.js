@@ -24,7 +24,7 @@ const Result10 = ({ filteredList, setQuery }) => {
 const Weather = ({ country, query }) => {
   const [weather, setWeather] = useState("");
 
-  const api_key = "774f771de49d255580a3846808821038";
+  const api_key = process.env.REACT_APP_API_KEY;
   console.log("api_key", api_key);
 
   useEffect(() => {
