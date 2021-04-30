@@ -16,12 +16,12 @@ const App = () => {
       .then((initialPhonebook) => {
         setPersons(initialPhonebook);
       })
-      .catch((error) => {
-        console.log("fail");
+      .catch((err) => {
+        console.log(err);
       });
   }, []);
 
-  //Filter section :Check if the name already exists in the phonebook
+  //1. Filter section :Check if the name already exists in the phonebook
   const handleFilterChange = (e) => {
     setFilteredPersons(
       persons.filter((p) =>
@@ -30,37 +30,35 @@ const App = () => {
     );
   };
 
-  //Add new person
-  const addPerson = (e) => {
+  //2. PersonForm section
+  const handleSubmit = (e) => {
     e.preventDefault();
     const newPerson = { name: newName, number: newNumber };
-
-    //Alarm if the input name exists
-    const checkedName = persons.find(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    const checkedPerson = persons.find(
+      (p) => p.name.toLowerCase() === newName.toLowerCase()
     );
-    if (checkedName) {
-      return alert(`${newName} is already added to phonebook`);
-    }
 
-    //Add a new person
-    personService
-      .create(newPerson)
-      .then((returnedPhonebook) => {
-        setPersons(persons.concat(returnedPhonebook));
-        // setPersons([...persons, newPerson]);
-        setNewName("");
-        setNewNumber("");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (checkedPerson) {
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        checkedPerson.number = newNumber;
+        personService.update(checkedPerson.id, checkedPerson);
+      }
+    } else {
+      personService.create(newPerson);
+    }
+    setNewName("");
+    setNewNumber("");
   };
 
   //Delete person
   const handleDelete = (e) => {
     if (window.confirm(`Do you want to delete ${e.target.name}?`)) {
       console.log(e.target.value);
+      console.log(e.target.name);
       personService
         .remove(e.target.value)
         .then(() => {
@@ -87,7 +85,7 @@ const App = () => {
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
-        addPerson={addPerson}
+        handleSubmit={handleSubmit}
       />
       <h3>Numbers</h3>
       <Persons persons={persons} handleDelete={handleDelete} />

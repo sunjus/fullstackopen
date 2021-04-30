@@ -26,9 +26,14 @@
       "id": 5
     },
     {
-      "name": "test",
-      "number": "12345",
-      "id": 8
+      "name": "arto hellas",
+      "number": "123",
+      "id": 6
+    },
+    {
+      "name": "arto",
+      "number": "7895",
+      "id": 7
     }
   ]
 }

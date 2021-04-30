@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
 const PersonForm = ({
   newName,
   setNewName,
   newNumber,
   setNewNumber,
-  addPerson,
+  handleSubmit,
 }) => {
   return (
-    <form onSubmit={addPerson}>
+    <form onSubmit={handleSubmit}>
       <div>
         name:{" "}
         <input value={newName} onChange={(e) => setNewName(e.target.value)} />
