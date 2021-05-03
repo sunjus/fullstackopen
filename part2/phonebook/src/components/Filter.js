@@ -1,15 +1,13 @@
 import React from "react";
 
-const Filter = ({ handleFilterChange, filteredPersons }) => {
+const Filter = ({ filteredPerson, setFilteredPerson }) => {
   return (
     <div>
       filter shown with
-      <input onChange={handleFilterChange} />
-      {filteredPersons.map((p, i) => (
-        <div key={i}>
-          {p.name} {p.number}
-        </div>
-      ))}
+      <input
+        onChange={(e) => setFilteredPerson(e.target.value)}
+        value={filteredPerson}
+      />
     </div>
   );
 };

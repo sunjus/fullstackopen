@@ -1,18 +1,25 @@
 import React from "react";
+import Person from "./Person";
 
-const Persons = ({ persons, handleDelete }) => {
+const Persons = ({ persons, filteredPerson, setPersons, notice }) => {
+  const filteredPersons =
+    filteredPerson === ""
+      ? persons
+      : persons.find((person) =>
+          person.name.toLowerCase().includes(filteredPerson.toLowerCase())
+        );
   return (
-    <ul>
-      {persons.map((p, i) => (
-        <div key={i}>
-          {p.name}
-          {p.number}
-          <button onClick={handleDelete} name={p.name} value={p.id}>
-            delete
-          </button>
-        </div>
+    <div>
+      {filteredPersons.map((person, i) => (
+        <Person
+          key={i}
+          persons={persons}
+          person={person}
+          setPersons={setPersons}
+          notice={notice}
+        />
       ))}
-    </ul>
+    </div>
   );
 };
 

@@ -1,11 +1,14 @@
 import React from "react";
 
-const Notification = ({ errorMessage }) => {
-  console.log(errorMessage);
-  if (errorMessage === null) {
+const Notification = ({ message: { msg, type } }) => {
+  //console.log(message);
+
+  if (msg === "") {
     return null;
   }
-  return <div className="error">{errorMessage}</div>;
+  return (
+    <div className={type === "error" ? "error" : "notification"}>{msg}</div>
+  );
 };
 
 export default Notification;
