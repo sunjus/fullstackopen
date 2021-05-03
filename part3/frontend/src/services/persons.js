@@ -6,18 +6,14 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
-const create = (newPerson) => {
-  const request = axios.post(baseUrl, newPerson);
+const create = (newObject) => {
+  const request = axios.post(baseUrl, newObject);
   return request.then((response) => response.data);
 };
 
-const update = (id, newPerson) => {
-  const request = axios.put(`${baseUrl}/${id}`, newPerson);
+const remove = (id) => {
+  const request = axios.delete(`${baseUrl}/${id}`);
   return request.then((response) => response.data);
 };
 
-export default {
-  getAll: getAll,
-  create: create,
-  update: update,
-};
+export default { getAll, create, remove };

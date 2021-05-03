@@ -1,7 +1,7 @@
 import React from "react";
 import Person from "./Person";
 
-const Persons = ({ filter, persons, person }) => {
+const Persons = ({ filter, persons, setPersons }) => {
   const filterPersons =
     filter === ""
       ? persons
@@ -11,7 +11,12 @@ const Persons = ({ filter, persons, person }) => {
   return (
     <div>
       {filterPersons.map((person, i) => (
-        <Person key={i} person={person} />
+        <Person
+          key={i}
+          person={person}
+          persons={persons}
+          setPersons={setPersons}
+        />
       ))}
     </div>
   );
