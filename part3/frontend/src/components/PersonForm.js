@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import personService from "../services/persons";
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ persons, setPersons, message }) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -11,7 +11,7 @@ const PersonForm = ({ persons, setPersons }) => {
     const newPerson = { name: newName, number: newNumber };
 
     if (newPerson.name === "" || newPerson.number === "") {
-      alert("Enter name and number.");
+      message("Enter name and number.", "error");
     } else if (
       persons.filter((person) => person.name === newPerson.name).length > 0
     ) {
@@ -35,7 +35,7 @@ const PersonForm = ({ persons, setPersons }) => {
             setNewNumber("");
           })
           .catch(() => {
-            alert("The person does not exist");
+            message("The person does not exist", "error");
           });
       }
     } else {
@@ -43,6 +43,7 @@ const PersonForm = ({ persons, setPersons }) => {
         setPersons(persons.concat(newPerson));
         setNewName("");
         setNewNumber("");
+        message(`Added ${newPerson.name}`, "success");
       });
     }
   };
