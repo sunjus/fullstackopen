@@ -1,22 +1,22 @@
 import React from "react";
 import Person from "./Person";
 
-const Persons = ({ persons, filteredPerson, setPersons, notice }) => {
-  const filteredPersons =
-    filteredPerson === ""
+const Persons = ({ filter, persons, setPersons, message }) => {
+  const filterPersons =
+    filter === ""
       ? persons
-      : persons.find((person) =>
-          person.name.toLowerCase().includes(filteredPerson.toLowerCase())
+      : persons.filter((person) =>
+          person.name.toLowerCase().includes(filter.toLowerCase())
         );
   return (
     <div>
-      {filteredPersons.map((person, i) => (
+      {filterPersons.map((person, i) => (
         <Person
           key={i}
-          persons={persons}
           person={person}
+          persons={persons}
           setPersons={setPersons}
-          notice={notice}
+          message={message}
         />
       ))}
     </div>
