@@ -1,41 +1,42 @@
 import React, { useState } from "react";
+import personService from "../services/persons";
 
-import personService from "../services/personService";
-
-const PersonForm = ({ persons, setPersons, notice }) => {
+const PersonForm = ({ persons, setPersons, message }) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
   const addPerson = (e) => {
     e.preventDefault();
     const newPerson = { name: newName, number: newNumber };
+
     if (newPerson.name === "" || newPerson.number === "") {
-      notice("Enter name and number", "error");
+      message("Enter name and number.", "error");
     } else if (
-      persons.filter(
-        (p) => p.name.toLowerCase() === newPerson.name.toLowerCase()
-      ).length > 0
+      persons.filter((person) => person.name === newPerson.name).length > 0
     ) {
       if (
         window.confirm(
-          `${newPerson.name} is already added to phonebook, replace the old number with a new one?`
+          `${newPerson.name} is already added to phonebook, replace the old number with a new  one?`
         )
       ) {
-        const samePerson = persons.filter((p) => p.name === newName)[0];
+        const samePerson = persons.filter(
+          (person) => person.name === newName
+        )[0];
         personService
           .update({ ...samePerson, number: newPerson.number })
           .then((res) => {
-            setPersons(persons.map((p) => (p.id === samePerson.id ? res : p)));
+            setPersons(
+              persons.map((person) =>
+                person.id === samePerson.id ? res : person
+              )
+            );
             setNewName("");
             setNewNumber("");
-            notice(
-              `${samePerson.name} number was successfully updated`,
-              "success"
-            );
+            message(`${samePerson.name}'s number was updated`, "success");
           })
           .catch(() => {
-            setPersons(persons.filter((p) => p.id !== samePerson.id));
-            notice(`${samePerson.name} does not exist`, "error");
+            setPersons(persons.filter((person) => person.id !== samePerson.id));
+            message(`${samePerson.name} does not exist`, "error");
           });
       }
     } else {
@@ -43,28 +44,33 @@ const PersonForm = ({ persons, setPersons, notice }) => {
         setPersons(persons.concat(res));
         setNewName("");
         setNewNumber("");
-        notice(`Added ${newPerson.name}`, "success");
+        message(`Added ${newPerson.name}`, "success");
       });
     }
   };
 
+  const handleNameChange = (e) => {
+    setNewName(e.target.value);
+  };
+
+  const handleNumberChange = (e) => {
+    setNewNumber(e.target.value);
+  };
+
   return (
-    <form onSubmit={addPerson}>
-      <div>
-        name:{" "}
-        <input value={newName} onChange={(e) => setNewName(e.target.value)} />
-      </div>
-      <div>
-        number:{" "}
-        <input
-          value={newNumber}
-          onChange={(e) => setNewNumber(e.target.value)}
-        />
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
+    <div>
+      <form onSubmit={addPerson}>
+        <div>
+          name: <input onChange={handleNameChange} value={newName} />
+        </div>
+        <div>
+          number: <input onChange={handleNumberChange} value={newNumber} />
+        </div>
+        <div>
+          <button type="submit">Add</button>
+        </div>
+      </form>
+    </div>
   );
 };
 
