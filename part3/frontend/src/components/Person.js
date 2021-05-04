@@ -1,16 +1,22 @@
 import React from "react";
 import personService from "../services/persons";
 
-const Person = ({ person, persons, setPersons }) => {
+const Person = ({ person, persons, setPersons, message }) => {
   const handleDelete = (id) => {
     if (window.confirm(`Do you want to delete ${person.name}?`)) {
       personService
         .remove(id)
         .then(() => {
-          setPersons(persons.filter((person) => person.id !== id));
+          message(`${person.name} has been removed from server`, "success");
         })
         .catch(() => {
-          alert("It does not exist");
+          message(
+            `${person.name} has been already removed from server`,
+            "error"
+          );
+        })
+        .finally(() => {
+          setPersons(persons.filter((person) => person.id !== id));
         });
     }
   };

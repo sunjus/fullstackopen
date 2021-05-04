@@ -33,14 +33,16 @@ const PersonForm = ({ persons, setPersons, message }) => {
             );
             setNewName("");
             setNewNumber("");
+            message(`${samePerson.name}'s number was updated`, "success");
           })
           .catch(() => {
-            message("The person does not exist", "error");
+            setPersons(persons.filter((person) => person.id !== samePerson.id));
+            message(`${samePerson.name} does not exist`, "error");
           });
       }
     } else {
-      personService.create(newPerson).then((response) => {
-        setPersons(persons.concat(newPerson));
+      personService.create(newPerson).then((res) => {
+        setPersons(persons.concat(res));
         setNewName("");
         setNewNumber("");
         message(`Added ${newPerson.name}`, "success");

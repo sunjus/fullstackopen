@@ -1,7 +1,7 @@
 import React from "react";
 import Person from "./Person";
 
-const Persons = ({ filter, persons, setPersons }) => {
+const Persons = ({ filter, persons, setPersons, message }) => {
   const filterPersons =
     filter === ""
       ? persons
@@ -16,6 +16,7 @@ const Persons = ({ filter, persons, setPersons }) => {
           person={person}
           persons={persons}
           setPersons={setPersons}
+          message={message}
         />
       ))}
     </div>

@@ -36,7 +36,12 @@ const App = () => {
       <Filter handleFilter={handleFilter} filter={filter} />
       <PersonForm persons={persons} setPersons={setPersons} message={message} />
       <h2>Numbers</h2>
-      <Persons persons={persons} filter={filter} setPersons={setPersons} />
+      <Persons
+        persons={persons}
+        filter={filter}
+        setPersons={setPersons}
+        message={message}
+      />
     </div>
   );
 };
