@@ -1,43 +1,46 @@
+import "./App.css";
 import React, { useState, useEffect } from "react";
-import personService from "./services/personService";
-
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
-import Persons from "./components/Person";
+import Persons from "./components/Persons";
+import personService from "./services/persons";
 import Notification from "./components/Notification";
 
 const App = () => {
-  const [filteredPerson, setFilteredPerson] = useState("");
   const [persons, setPersons] = useState([]);
-  const [message, setMessage] = useState({ msg: "", type: "" });
+  const [filter, setFilter] = useState("");
+  const [errorMsg, setErrorMsg] = useState({ msg: "", type: "" });
 
   useEffect(() => {
+    //axios.get("http://localhost/3001/persons").then((res) => {
+    //setPersons(res.data);
     personService.getAll().then((initialPhonebook) => {
       setPersons(initialPhonebook);
     });
+    // });
   }, []);
 
-  const notice = (newMsg, newType) => {
-    setMessage({ msg: newMsg, type: newType });
-    setTimeout(() => setMessage({ msg: "", type: "" }), 5000);
+  const message = (newMsg, newType) => {
+    setErrorMsg({ msg: newMsg, type: newType });
+    setTimeout(() => setErrorMsg({ msg: "", type: "" }), 5000);
+  };
+
+  const handleFilter = (e) => {
+    setFilter(e.target.value);
   };
 
   return (
-    <div>
-      <h2>Phonebook</h2>
-      <Notification message={message} />
-      <Filter
-        filteredPerson={filteredPerson}
-        setFilteredPerson={setFilteredPerson}
-      />
-      <h3>Add a new</h3>
-      <PersonForm persons={persons} setPersons={setPersons} notice={notice} />
-      <h3>Numbers</h3>
+    <div className="App">
+      <h1>Phonebook</h1>
+      <Notification errorMsg={errorMsg} />
+      <Filter handleFilter={handleFilter} filter={filter} />
+      <PersonForm persons={persons} setPersons={setPersons} message={message} />
+      <h2>Numbers</h2>
       <Persons
         persons={persons}
-        filteredPerson={filteredPerson}
+        filter={filter}
         setPersons={setPersons}
-        notice={notice}
+        message={message}
       />
     </div>
   );
