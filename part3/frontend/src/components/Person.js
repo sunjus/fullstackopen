@@ -17,7 +17,8 @@ const Person = ({ person, persons, setPersons }) => {
   return (
     <div>
       {person.name}
-      {person.number}
+      {":"} {person.number}
+      {"  "}
       <button onClick={() => handleDelete(person.id)}>Delete</button>
     </div>
   );
