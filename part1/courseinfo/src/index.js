@@ -12,27 +12,26 @@ const Header = (props) => {
 const Content = (props) => {
   return (
     <div>
-      {props.parts.map((part) => (
-        <Part part={part} key={part.name} />
+      {props.parts.map((part, index) => (
+        <div key={index}>
+          {part.name}
+          {part.exercises}
+        </div>
       ))}
     </div>
   );
 };
 
-const Part = (props) => {
-  return (
-    <p>
-      {props.part.name} {props.part.exercises}
-    </p>
-  );
-};
-
-const Total = (props) => {
-  let total = 0;
-  props.parts.forEach((part) => (total += part.exercises));
+const Total = ({ parts }) => {
+  const part0 = parts[0];
+  const part1 = parts[1];
+  const part2 = parts[2];
   return (
     <div>
-      <p>The total number of exercises {total}</p>
+      <p>
+        Number of exercises{" "}
+        {part0.exercises + part1.exercises + part2.exercises}
+      </p>
     </div>
   );
 };
