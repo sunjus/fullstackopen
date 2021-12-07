@@ -1,66 +1,15 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import Axios from "axios";
 
-const Search = ({ handleSearch, query }) => (
-  <form>
-    <input onChange={handleSearch} value={query} />
-  </form>
-);
-
-const Result10 = ({ filteredList, setQuery }) => {
-  return (
-    <div>
-      {filteredList.map((country, i) => (
-        <div key={i}>
-          {country.name}
-          <button onClick={() => setQuery(country.name)}>show</button>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const Weather = ({ country, query }) => {
-  const [weather, setWeather] = useState("");
-
-  const api_key = process.env.REACT_APP_API_KEY;
-  console.log("api_key", api_key);
-
-  useEffect(() => {
-    axios
-      .get(
-        `http://api.weatherstack.com/current?access_key=${api_key}&query=${query}`
-      )
-      .then((res) => {
-        console.log(res.data);
-        setWeather(res.data.current);
-      });
-  }, [country]);
-
-  console.log(weather);
-  console.log(country);
-
-  return (
-    <div>
-      <h3>Weather in {country.capital}</h3>
-      <p>temperature: {weather.temperature} Celcius</p>
-      <img src={weather.weather_icons} style={{ width: 80, height: 80 }} />
-      <p>
-        wind:{weather.wind_speed} mph direction {weather.wind_dir}
-      </p>
-    </div>
-  );
-};
-
-const Result1 = ({ country }) => {
+const Country = ({ country }) => {
   return (
     <div>
       <h1>{country.name}</h1>
       <p>Capital {country.capital}</p>
       <p>Population {country.population} </p>
 
-      <h3>Spoken languages</h3>
+      <h3>languages</h3>
       <ul>
         {country.languages.map((language) => (
           <li key={country.name + language.name}>{language.name}</li>
@@ -71,51 +20,109 @@ const Result1 = ({ country }) => {
         alt={country.name}
         style={{ width: 120, height: 120 }}
       />
-      <Weather query={country.name} country={country} />
+      <Weather capital={country.capital} />
     </div>
   );
 };
 
-const ResultMaster = ({ filteredList, setQuery }) => {
-  if (filteredList.length === 1) {
-    return <Result1 country={filteredList[0]} />;
-    //fixed err to specify strict range : added filteredList length > 1
-    //so that the setQuery works well.
-  } else if (filteredList.length < 10 || filteredList.length > 1) {
-    return <Result10 filteredList={filteredList} setQuery={setQuery} />;
+const Countries10 = ({ searchedCountries, setSearch }) => {
+  return (
+    <div>
+      {searchedCountries.map((country, index) => (
+        <div key={index}>
+          {country.name}
+          <button onClick={() => setSearch(country.name)}>show</button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const Countries = ({ searchedCountries, setSearch }) => {
+  if (searchedCountries.length === 1) {
+    return <Country country={searchedCountries[0]} />;
+  } else if (searchedCountries.length < 10 || searchedCountries.length > 1) {
+    return (
+      <Countries10
+        searchedCountries={searchedCountries}
+        setSearch={setSearch}
+      />
+    );
   }
   return <div>Too many matches, specify another filter</div>;
 };
 
-function App() {
-  const [countries, setCountries] = useState([]);
-  const [query, setQuery] = useState("");
+const Search = ({ handleInputSearch, search }) => {
+  return (
+    <div>
+      find countries
+      <input onChange={handleInputSearch} value={search} />
+    </div>
+  );
+};
+
+const api_key = process.env.REACT_APP_API_KEY;
+
+const Weather = ({ capital }) => {
+  const [weather, setWeather] = useState("");
+
+  const api = `http://api.weatherstack.com/current?access_key=${api_key}&query=${capital}`;
 
   useEffect(() => {
-    axios.get("https://restcountries.eu/rest/v2/all").then((res) => {
+    Axios.get(api).then((res) => {
+      console.log(res.data);
+      setWeather(res.data.current);
+    });
+  }, [api]);
+
+  console.log(weather);
+
+  return (
+    <div>
+      <h2>Weather in {capital} </h2>
+      <p>
+        <strong>temperature: </strong> {weather.temperature} Celsius{" "}
+      </p>
+      <img
+        src={weather.weather_icons}
+        alt="weather icon"
+        style={{ widht: "100px", height: "100px" }}
+      />
+      <p>
+        <strong>wind:</strong> {weather.wind_speed} mph direction{" "}
+        {weather.wind_dir}
+      </p>
+    </div>
+  );
+};
+function App() {
+  const [countries, setCountries] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    Axios.get("https://restcountries.com/v2/all").then((res) => {
       console.log(res.data);
       setCountries(res.data);
     });
   }, []);
 
-  const handleSearch = (e) => {
-    setQuery(e.target.value);
+  const handleInputSearch = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    setSearch(e.target.value);
   };
 
-  const filteredList =
-    query === ""
+  const searchedCountries =
+    search === ""
       ? []
-      : countries.filter((c) =>
-          c.name.toLowerCase().includes(query.toLowerCase())
+      : countries.filter((country) =>
+          country.name.toLowerCase().includes(search.toLowerCase())
         );
 
   return (
-    <div className="App">
-      <div>
-        find countries
-        <Search query={query} handleSearch={handleSearch} />
-        <ResultMaster filteredList={filteredList} setQuery={setQuery} />
-      </div>
+    <div>
+      <Search handleInputSearch={handleInputSearch} search={search} />
+      <Countries setSearch={setSearch} searchedCountries={searchedCountries} />
     </div>
   );
 }
