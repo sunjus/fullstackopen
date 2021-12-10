@@ -1,59 +1,72 @@
 import React, { useState } from "react";
-import personService from "../services/persons";
+import services from "../services/services";
 
-const PersonForm = ({ persons, setPersons, message }) => {
+const PersonForm = ({ persons, setPersons }) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
   const addPerson = (e) => {
     e.preventDefault();
-    const newPerson = { name: newName, number: newNumber };
+    //console.log(e.target);
 
-    if (newPerson.name === "" || newPerson.number === "") {
-      message("Enter name and number.", "error");
-    } else if (
-      persons.filter((person) => person.name === newPerson.name).length > 0
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+    const names = persons.map((p) => p.name.toLowerCase());
+
+    names.indexOf(newPerson.name.toLowerCase()) > -1
+      ? updatePerson(newName, newNumber)
+      : services.create(newPerson).then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
+        });
+  };
+
+  const updatePerson = (name, newNumber) => {
+    const person = persons.find(
+      (p) => p.name.toLowerCase() === name.toLowerCase()
+    );
+
+    const id = person.id;
+    const updatedPerson = { ...person, number: newNumber };
+
+    if (
+      window.confirm(
+        `${name} is already added to phonebook, replace the old number with a new one?`
+      )
     ) {
-      if (
-        window.confirm(
-          `${newPerson.name} is already added to phonebook, replace the old number with a new  one?`
-        )
-      ) {
-        const samePerson = persons.filter(
-          (person) => person.name === newName
-        )[0];
-        personService
-          .update({ ...samePerson, number: newPerson.number })
-          .then((res) => {
-            setPersons(
-              persons.map((person) =>
-                person.id === samePerson.id ? res : person
-              )
-            );
-            setNewName("");
-            setNewNumber("");
-            message(`${samePerson.name}'s number was updated`, "success");
-          })
-          .catch(() => {
-            setPersons(persons.filter((person) => person.id !== samePerson.id));
-            message(`${samePerson.name} does not exist`, "error");
-          });
-      }
-    } else {
-      personService.create(newPerson).then((res) => {
-        setPersons(persons.concat(res));
-        setNewName("");
-        setNewNumber("");
-        message(`Added ${newPerson.name}`, "success");
-      });
+      services
+        .update(id, updatedPerson)
+        .then((returnedPerson) => {
+          console.log("update", returnedPerson);
+          setPersons(
+            persons.map((person) =>
+              person.id !== id ? person : returnedPerson.data
+            )
+          );
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          alert(`the person '${person.name}' was already deleted from server`);
+          setPersons(
+            persons.filter((p) => p.name.toLowerCase() !== name.toLowerCase())
+          );
+        });
     }
   };
 
-  const handleNameChange = (e) => {
+  const handleInputName = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
     setNewName(e.target.value);
   };
 
-  const handleNumberChange = (e) => {
+  const handleInputNumber = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
     setNewNumber(e.target.value);
   };
 
@@ -61,13 +74,13 @@ const PersonForm = ({ persons, setPersons, message }) => {
     <div>
       <form onSubmit={addPerson}>
         <div>
-          name: <input onChange={handleNameChange} value={newName} />
+          name: <input value={newName} onChange={handleInputName} />
         </div>
         <div>
-          number: <input onChange={handleNumberChange} value={newNumber} />
+          number: <input value={newNumber} onChange={handleInputNumber} />
         </div>
         <div>
-          <button type="submit">Add</button>
+          <button type="submit">add</button>
         </div>
       </form>
     </div>
